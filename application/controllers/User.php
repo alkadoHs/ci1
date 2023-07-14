@@ -2,9 +2,13 @@
 
 class User extends CI_Controller {
 
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('UserModel');
+        
+    }
 	public function index()
 	{
-        
         $this->load->view('users');
     }
 
@@ -19,8 +23,29 @@ class User extends CI_Controller {
 
     public function signup()
 	{
-        $this->load->view('signup');
+        $this->load->view('signup'); 
     }
+
+    public function create()
+	{
+        
+        $input_data =  [
+            "email" => $this->input->post('email'),
+            "username" => $this->input->post('username'),
+            "password" => $this->input->post('password'),
+        ];
+
+        $query = $this->UserModel->insert_user($input_data);
+
+       if($query === FALSE) {
+         $this->session->set_flashdata('userExist', 'User already exit!');
+         redirect("user/signup");
+       } else {
+         redirect("user/users");
+       }
+    }
+
+    
 
     public function inbox()
 	{
@@ -51,7 +76,6 @@ class User extends CI_Controller {
             "password" => $this->input->post('password')
         ];
 
-        $this->load->model('UserModel');
         $user = $this->UserModel->get_user($data);
         
         if($user !== NULL) {
