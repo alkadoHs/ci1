@@ -2,28 +2,32 @@
 
 class User extends CI_Controller {
 
-	public function index(): void
+	public function index()
 	{
         
         $this->load->view('users');
     }
 
-    public function dashboard(): void
+    public function dashboard()
 	{
-        $this->load->view('dashboard');
+        if($this->session->userdata('user_id')) {
+           $this->load->view('dashboard');
+        } else {
+            return redirect("user/login");
+        }
     }
 
-    public function signup(): void
+    public function signup()
 	{
         $this->load->view('signup');
     }
 
-    public function inbox(): void
+    public function inbox()
 	{
         $this->load->view('inbox');
     }
 
-    public function users(): void
+    public function users()
 	{
         $this->load->view('users');
     }
@@ -32,21 +36,44 @@ class User extends CI_Controller {
         $this->load->view('user/'.$id);
     }
 
-    public function edit(): void
+    public function edit()
 	{
         $this->load->view('user_update');
     }
 
     public function login() {
-        $data = [
+        $this->load->view('login');
+    }
+
+    public function signin() {
+         $data = [
             "username" => $this->input->post('username'),
             "password" => $this->input->post('password')
         ];
 
         $this->load->model('UserModel');
-        $users = $this->UserModel->get_user($data);
+        $user = $this->UserModel->get_user($data);
+        
+        if($user !== NULL) {
+            $user_session = [
+                "user_id" => $user->id,
+                "username" => $user->username,
+                "email" => $user->email
+            ];
+            $this->session->set_userdata( $user_session );
+            redirect("dashboard");
+        } else {
+            $this->session->set_flashdata('errorLogin', 'The email or password you entered is incorrect, try again!');
 
-        $this->load->view('login');
+            redirect("user/login");
+        }
     }
+
+            public function logout()
+            { 
+               $this->session->unset_userdata('user_id');
+               
+               return redirect("user/login");
+            }
 
 }

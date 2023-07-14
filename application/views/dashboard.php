@@ -5,6 +5,12 @@
 
 <div class="flex justify-between items-center">
     <h2 class="text-2xl py-2 font-bold text-slate-800 border-b-4 border-orange-600">My feeds</h2>
+
+    <?php if($this->session->userdata('username')): ?>
+    <h2 class="text-xxl text-indigo-500"><?= "Welcome ".$this->session->userdata('username');
+     ?></h2>
+    <?php endif ?>
+
     <button class="rounded-lg bg-indigo-500 p-1 dark:bg-gray-800">
         <a href="<?= site_url('post/create') ?>">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 stroke-white">
