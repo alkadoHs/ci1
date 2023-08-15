@@ -51,7 +51,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'welcome';
 
-$route['dashboard'] = 'User/dashboard';
+$route['dashboard'] = 'post/index';
 
 $route['404_override'] = 'OutPages/page_not_found';
 $route['translate_uri_dashes'] = FALSE;
+
+
+//api routes
+

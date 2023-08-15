@@ -1,5 +1,4 @@
 <?php
-
 class User extends CI_Controller {
 
     public function __construct() {
@@ -28,21 +27,37 @@ class User extends CI_Controller {
 
     public function create()
 	{
-        
-        $input_data =  [
-            "email" => $this->input->post('email'),
-            "username" => $this->input->post('username'),
-            "password" => $this->input->post('password'),
-        ];
+        $config['upload_path']          = './assets/uploads/';
+        $config['allowed_types']        = 'gif|jpg|png';
 
-        $query = $this->UserModel->insert_user($input_data);
+        $this->load->library('upload', $config);
 
-       if($query === FALSE) {
-         $this->session->set_flashdata('userExist', 'User already exit!');
-         redirect("user/signup");
-       } else {
-         redirect("user/users");
-       }
+        if (!$this->upload->do_upload('img'))
+                {
+                    $error = array('error' => $this->upload->display_errors());
+                    return $error;
+                }
+                else
+                {
+                    $data = $this->upload->data();
+                    
+                    $input_data =  [
+                        "email" => $this->input->post('email'),
+                        "username" => $this->input->post('username'),
+                        "password" => $this->input->post('password'),
+                        "img" => "assets/uploads/".$data['orig_name'],
+                   ];
+
+                   $query = $this->UserModel->insert_user($input_data);
+
+                   if($query === FALSE) {
+                     $this->session->set_flashdata('userExist', 'User already exit!');
+                     redirect("user/signup");
+                   } else {
+                     redirect("user/users");
+                   }
+                }
+
     }
 
     
@@ -54,7 +69,10 @@ class User extends CI_Controller {
 
     public function users()
 	{
-        $this->load->view('users');
+         $q = $this->db->get('user');
+        $users = $q->result();
+
+        $this->load->view('users', ['users' => $users]);
     }
 
     public function user($id) {
@@ -82,7 +100,8 @@ class User extends CI_Controller {
             $user_session = [
                 "user_id" => $user->id,
                 "username" => $user->username,
-                "email" => $user->email
+                "email" => $user->email,
+                "image_url" => $user->img,
             ];
             $this->session->set_userdata( $user_session );
             redirect("dashboard");
@@ -93,11 +112,11 @@ class User extends CI_Controller {
         }
     }
 
-            public function logout()
-            { 
-               $this->session->unset_userdata('user_id');
-               
-               return redirect("user/login");
-            }
+    public function logout()
+    { 
+        $this->session->unset_userdata('user_id');
+        
+        return redirect("user/login");
+    }
 
 }

@@ -27,17 +27,25 @@
         </a>
       </div>
       <div class="flex items-center">
+         <?php if($this->session->userdata('user_id')): ?>
           <div class="flex items-center ml-3">
             <div>
-              <button type="button" class="flex text-sm bg-slate-200 rounded-full p-1 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+              <button type="button" class="flex text-sm bg-slate-200 rounded-full overflow-hidden p-1 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                 <span class="sr-only">Open user menu</span>
+                <?php
+                 $image_url = $this->session->userdata('image_url');
+
+                  ?>
+                <?php if($image_url !== null):?>
+                <img src="<?php echo base_url($image_url) ?>" class="w-8 h-8 rounded-full" alt="">
+                <?php else: ?>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 stroke-green-600">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                    </svg>
+               </svg>
+               <?php endif ?>
               </button>
             </div>
             <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
-            <?php if($this->session->userdata('user_id')): ?>
               <div class="px-4 py-3" role="none">
                 <p class="text-sm text-gray-900 dark:text-white" role="none">
                   <?= 
@@ -48,21 +56,21 @@
                   <?= $this->session->userdata('email');?>
                 </p>
               </div>
-            <?php endif ?>
               <ul class="py-1" role="none">
-                <li>
-                  <a href="<?= site_url("dashboard") ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
-                </li>
-                <li>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-                </li>
-                <li>
-                  <a href="<?= site_url("user/logout") ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
-                </li>
-              </ul>
+                 <li>
+                    <a href="<?= site_url("dashboard") ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
+                  </li>
+                  <li>
+                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                  </li>
+                  <li>
+                     <a href="<?= site_url("user/logout") ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                  </li>
+               </ul>
             </div>
-          </div>
-        </div>
+         </div>
+      <?php endif ?>
+      </div>
     </div>
   </div>
 </nav>
